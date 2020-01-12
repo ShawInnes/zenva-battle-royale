@@ -133,7 +133,10 @@ sysinfo.txt
 *.unitypackage
 *.symbols.zip
 
+*.app
+
 # Crashlytics generated file
+
 
 
 # End of https://www.gitignore.io/api/rider,unity
