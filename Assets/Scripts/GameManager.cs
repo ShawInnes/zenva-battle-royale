@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviourPun
 {
+    public float postGameTime;
+
     [Header("Players")]
     public string playerPrefabLocation;
 
@@ -38,9 +40,7 @@ public class GameManager : MonoBehaviourPun
         playersInGames++;
 
         if (PhotonNetwork.IsMasterClient && playersInGames == PhotonNetwork.PlayerList.Length)
-        {
             photonView.RPC("SpawnPlayer", RpcTarget.All);
-        }
     }
 
     [PunRPC]
@@ -55,12 +55,30 @@ public class GameManager : MonoBehaviourPun
 
     public PlayerController GetPlayer(int playerId)
     {
-        return this.players.First(p => p.id == playerId);
+        return this.players.First(p => p != null && p.id == playerId);
     }
 
     public PlayerController GetPlayer(GameObject playerObject)
     {
-        return this.players.First(p => p.gameObject == playerObject);
+        return this.players.First(p => p != null && p.gameObject == playerObject);
     }
 
+    public void CheckWinCondition()
+    {
+        if (alivePlayers == 1)
+            photonView.RPC("WinGame", RpcTarget.All, players.First(p => !p.dead).id);
+    }
+
+    [PunRPC]
+    void WinGame(int winningPlayer)
+    {
+        GameUI.instance.SetWinText(players.First(p => p.id == winningPlayer).photonPlayer.NickName);
+
+        Invoke("GoBackToMenu", postGameTime);
+    }
+
+    void GoBackToMention()
+    {
+        NetworkManager.instance.ChangeScene("Menu");
+    }
 }

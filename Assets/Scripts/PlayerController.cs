@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviourPun
 
     [Header("Stats")]
     public float moveSpeed;
+
     public float jumpForce;
 
     public int curHp;
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviourPun
 
     [Header("Components")]
     public Rigidbody rig;
+
     public Player photonPlayer;
     public MeshRenderer meshRenderer;
     public PlayerWeapon weapon;
@@ -44,6 +46,10 @@ public class PlayerController : MonoBehaviourPun
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
             rig.isKinematic = true;
         }
+        else
+        {
+            GameUI.instance.Initialize(this);
+        }
     }
 
     private void Update()
@@ -56,7 +62,7 @@ public class PlayerController : MonoBehaviourPun
         if (Input.GetKeyDown(KeyCode.Space))
             TryJump();
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
             weapon.TryShoot();
     }
 
@@ -92,6 +98,7 @@ public class PlayerController : MonoBehaviourPun
         photonView.RPC("DamageFlash", RpcTarget.Others);
 
         // update health ui
+        GameUI.instance.UpdateHealthBar();
 
         // die
 
@@ -124,6 +131,43 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void Die()
     {
+        curHp = 0;
         dead = true;
+
+        GameManager.instance.alivePlayers--;
+
+        if (PhotonNetwork.IsMasterClient)
+            GameManager.instance.CheckWinCondition();
+
+        if (photonView.IsMine)
+        {
+            if (curAttackerId != 0)
+                GameManager.instance.GetPlayer(curAttackerId).photonView.RPC("AddKill", RpcTarget.All);
+
+            // set camera to spectator
+            GetComponentInChildren<CameraController>().SetAsSpectator();
+
+            // disable the player physics, hide the player
+            rig.isKinematic = true;
+            transform.position = new Vector3(0, -50, 0);
+        }
+    }
+
+    [PunRPC]
+    public void AddKill()
+    {
+        kills++;
+
+        // update ui
+        GameUI.instance.UpdatePlayerInfoText();
+    }
+
+    [PunRPC]
+    public void Heal(int amountToHeal)
+    {
+        curHp = Mathf.Clamp(curHp + amountToHeal, 0, maxHp);
+
+        // update ui
+        GameUI.instance.UpdateHealthBar();
     }
 }

@@ -40,5 +40,9 @@ MonoBehaviour:
   - TakeDamage
   - SpawnBullet
   - DamageFlash
+  - WinGame
+  - AddKill
+  - GiveAmmo
+  - Heal
   DisableAutoOpenWizard: 1
   ShowSettings: 1

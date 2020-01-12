@@ -18,6 +18,8 @@
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>MultiPlay.app</Path>
+      <Path>MultiPlay1.app</Path>
+      <Path>MultiPlay2.app</Path>
       <Path>Temp</Path>
       <Path>obj</Path>
     </explicitExcludes>
