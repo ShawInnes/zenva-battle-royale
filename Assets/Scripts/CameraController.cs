@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
     private float rotX;
     private float rotY;
 
-    private bool isSpectator = true;
+    private bool isSpectator = false;
 
     void Start()
     {
@@ -53,6 +53,15 @@ public class CameraController : MonoBehaviour
 
             Vector3 direction = transform.right * x + transform.up * y + transform.forward * z;
             transform.position += direction * spectatorMoveSpeed * Time.deltaTime;
+        }
+        else
+        {
+            // rotate the camera vertically
+            transform.localRotation = Quaternion.Euler(-rotY, 0, 0);
+
+            // rotate the player horizontally
+            transform.parent.rotation = Quaternion.Euler(0, rotX, 0);
+
         }
     }
 }

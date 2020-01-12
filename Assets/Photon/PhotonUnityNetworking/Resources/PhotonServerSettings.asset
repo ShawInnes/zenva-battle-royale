@@ -31,5 +31,10 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - UpdateLobbyUI
+  - ChangeScene
+  - PlayerInGame
+  - SpawnPlayer
+  - Initialize
   DisableAutoOpenWizard: 1
   ShowSettings: 1
