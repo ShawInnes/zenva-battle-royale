@@ -36,5 +36,9 @@ MonoBehaviour:
   - PlayerInGame
   - SpawnPlayer
   - Initialize
+  - Die
+  - TakeDamage
+  - SpawnBullet
+  - DamageFlash
   DisableAutoOpenWizard: 1
   ShowSettings: 1

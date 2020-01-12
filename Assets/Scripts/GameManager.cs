@@ -52,4 +52,15 @@ public class GameManager : MonoBehaviourPun
         // initialize the player for all other players
         playerObj.GetComponent<PlayerController>().photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
+
+    public PlayerController GetPlayer(int playerId)
+    {
+        return this.players.First(p => p.id == playerId);
+    }
+
+    public PlayerController GetPlayer(GameObject playerObject)
+    {
+        return this.players.First(p => p.gameObject == playerObject);
+    }
+
 }

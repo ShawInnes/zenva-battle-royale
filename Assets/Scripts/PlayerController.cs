@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviourPun
     public Rigidbody rig;
     public Player photonPlayer;
     public MeshRenderer meshRenderer;
+    public PlayerWeapon weapon;
 
     [PunRPC]
     public void Initialize(Player player)
@@ -53,6 +55,9 @@ public class PlayerController : MonoBehaviourPun
 
         if (Input.GetKeyDown(KeyCode.Space))
             TryJump();
+
+        if(Input.GetMouseButtonDown(0))
+            weapon.TryShoot();
     }
 
     void Move()
@@ -94,6 +99,7 @@ public class PlayerController : MonoBehaviourPun
             photonView.RPC("Die", RpcTarget.All);
     }
 
+    [PunRPC]
     void DamageFlash()
     {
         if (flashingDamage)
